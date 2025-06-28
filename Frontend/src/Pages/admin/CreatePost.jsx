@@ -6,6 +6,9 @@ import { RichTextEditor } from "../../components/RichTextEditor";
 import { generateSlug } from "../../lib/slug";
 import { ArrowLeft, Save } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+const BaseUrl = import.meta.env.VITE_BASE_URL;
+
 
 export const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -27,13 +30,13 @@ export const CreatePost = () => {
     e.preventDefault();
     
     if (!title.trim() || !content.trim()) {
-      alert("Please fill in both title and content.");
+      toast.error("Title and content cannot be empty.");
       return;
     }
 
     // Check if content contains images
     if (containsImages(content)) {
-      alert("Images are not allowed in blog posts. Please remove any images and try again.");
+      toast.error("Please ensure that images are not allowed.");
       return;
     }
 
@@ -46,18 +49,18 @@ export const CreatePost = () => {
         slug: generatedSlug
       };
 
-      const response = await axios.post('http://localhost:5000/api/posts', postData);
+      const response = await axios.post(`${BaseUrl}/api/posts`, postData);
       
-      alert(`Post "${title}" has been created successfully!`);
+      toast.success(`Post "${title}" has been created successfully!`);
       
       navigate(`/blog/${response.data.slug}`);
     } catch (error) {
       console.error('Error creating post:', error);
       
       if (error.response?.status === 400 && error.response?.data?.message?.includes('Slug already exists')) {
-        alert("A post with this title already exists. Please choose a different title or modify it slightly.");
+        toast.error("A post with this title already exists. Please choose a different title or modify it slightly.");
       } else {
-        alert("Failed to create post. Please try again.");
+        toast.error("Failed to create post. Please try again.");
       }
     } finally {
       setIsSubmitting(false);

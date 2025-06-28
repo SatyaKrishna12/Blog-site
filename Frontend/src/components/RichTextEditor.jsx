@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import JoditEditor from 'jodit-react';
+import { toast } from 'react-toastify';
 
 export const RichTextEditor = ({ value, onChange, placeholder = "Write your blog post content..." }) => {
   const config = useMemo(() => ({
@@ -41,7 +42,7 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Write your blog
             // Block image paste
             if (items[i].type.indexOf('image') !== -1) {
               event.preventDefault();
-              alert('Image pasting is not allowed. Please use text content only.');
+              toast.error('Image paste is not allowed. Please use text content only.');
               return false;
             }
           }
@@ -53,7 +54,7 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Write your blog
         for (let i = 0; i < files.length; i++) {
           if (files[i].type.indexOf('image') !== -1) {
             event.preventDefault();
-            alert('Image upload is not allowed. Please use text content only.');
+            toast.error('Image drop is not allowed. Please use text content only.');
             return false;
           }
         }

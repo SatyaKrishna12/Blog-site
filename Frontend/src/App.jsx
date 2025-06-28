@@ -11,6 +11,7 @@ import { Register } from './Pages/Register'
 import { About } from './Pages/About'
 import { Contact } from './Pages/Contact'
 import { AdminRoute } from './components/ProtectedRoute'
+import { ToastContainer, toast } from 'react-toastify';
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
         } />
         <Route path='*' element={<NotFound/>}/>
       </Routes>
+      <ToastContainer/>
     </>
   )
 }

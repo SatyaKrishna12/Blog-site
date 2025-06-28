@@ -2,6 +2,8 @@ import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Calendar, ArrowLeft } from "lucide-react";
+const BaseUrl = import.meta.env.VITE_BASE_URL;
+
 
 export const BlogPost = () => {
   const { slug } = useParams();
@@ -18,7 +20,7 @@ export const BlogPost = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/posts/${slug}`);
+        const response = await axios.get(`${BaseUrl}/posts/${slug}`);
         setPost(response.data);
         setError(null);
         

@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import { PenTool, Eye, Edit, Trash2, Plus } from "lucide-react";
+import { toast } from "react-toastify";
+const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 export const AdminDashboard = () => {
   const [posts, setPosts] = useState([]);
@@ -12,7 +14,7 @@ export const AdminDashboard = () => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/posts');
+      const response = await axios.get(`${BaseUrl}/posts`);
       setPosts(response.data);
       setError(null);
     } catch (err) {
@@ -30,13 +32,12 @@ export const AdminDashboard = () => {
   const handleDelete = async (slug, title) => {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
       try {
-        await axios.delete(`http://localhost:5000/api/posts/${slug}`);
-        // Refresh the posts list after successful deletion
+        await axios.delete(`${BaseUrl}/posts/${slug}`);
         await fetchPosts();
-        alert("The blog post has been successfully deleted.");
+        toast.success(`Post "${title}" has been deleted successfully!`);
       } catch (err) {
         console.error('Error deleting post:', err);
-        alert("Failed to delete the post. Please try again.");
+        toast.error('Failed to delete post. Please try again later.');
       }
     }
   };
@@ -115,13 +116,13 @@ export const AdminDashboard = () => {
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <CardTitle className="line-clamp-1 text-gray-900">{post.title}</CardTitle>
-                    <CardDescription className="mt-2">
+                    <div className="mt-2">
                       <div className="flex items-center gap-4 text-sm text-gray-600">
                         <span>Created: {formatDate(post.createdAt)}</span>
                         <span>•</span>
                         <span>Slug: /{post.slug}</span>
                       </div>
-                    </CardDescription>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Link to={`/blog/${post.slug}`}>

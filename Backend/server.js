@@ -8,13 +8,14 @@ const postRoutes = require('./routes/Post');
 const userRoutes = require('./routes/User');
 const Posts = require('./models/Posts');
 const dotenv = require('dotenv');
-dotenv.config(); 
+dotenv.config();
+
 
 app.use(methodOveride("_method"));
 app.use(cors()); 
 app.use(express.json());
 
-const MONGO_URL = process.env.MONGO_URL 
+const MONGO_URL = process.env.MONGO_URL; 
 let port = 5000; 
 
 //MongoDB Connection

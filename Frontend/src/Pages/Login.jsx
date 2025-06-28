@@ -4,6 +4,8 @@ import axios from "axios";
 import { useAuth } from "../context/Authcontext";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
 import { Eye, EyeOff, LogIn, Home } from "lucide-react";
+import { toast } from "react-toastify";
+const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 export const Login = () => {
   const [formData, setFormData] = useState({
@@ -44,30 +46,37 @@ export const Login = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/users/login', {
+      const response = await axios.post(`${BaseUrl}/users/login`, {
         email: formData.email,
         password: formData.password
       });
 
       const { token, user } = response.data;
-      login(token, user); // ✅ Use AuthContext login
+      login(token, user); 
 
-      if (user.isAdmin) {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
+      toast.success(`Welcome back, ${user.username}! Login successful.`);
+
+      setTimeout(() => {
+        if (user.isAdmin) {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      }, 1000); 
     } catch (err) {
       console.error('Login error:', err);
+      let errorMessage = "Login failed. Please try again later.";
+      
       if (err.response?.data?.message) {
-        setError(err.response.data.message);
+        errorMessage = err.response.data.message;
       } else if (err.response?.status === 404) {
-        setError("User not found. Please check your email address.");
+        errorMessage = "User not found. Please check your email address.";
       } else if (err.response?.status === 401) {
-        setError("Invalid password. Please try again.");
-      } else {
-        setError("Login failed. Please try again later.");
+        errorMessage = "Invalid password. Please try again.";
       }
+      
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +110,7 @@ export const Login = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {error && alert(error)}
+              
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">

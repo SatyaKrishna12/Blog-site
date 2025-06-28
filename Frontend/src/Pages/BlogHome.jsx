@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Calendar, ArrowRight, Search, X } from "lucide-react";
 
+const BaseUrl = import.meta.env.VITE_BASE_URL;
+
+
 export const BlogHome = () => {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -14,7 +17,7 @@ export const BlogHome = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/posts');
+        const response = await axios.get(`${BaseUrl}/posts`);
         setPosts(response.data);
         setFilteredPosts(response.data); // Initialize filtered posts
         setError(null);

@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
 import { Eye, EyeOff, UserPlus, Home } from "lucide-react";
+import { toast } from "react-toastify";
+const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 export const Register = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +26,6 @@ export const Register = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (error) setError("");
     if (success) setSuccess("");
   };
@@ -35,14 +36,12 @@ export const Register = () => {
     setError("");
     setSuccess("");
 
-    // Basic validation
     if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
       setError("Please fill in all fields");
       setIsLoading(false);
       return;
     }
 
-    // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address");
@@ -50,14 +49,12 @@ export const Register = () => {
       return;
     }
 
-    // Password validation
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters long");
       setIsLoading(false);
       return;
     }
 
-    // Password confirmation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       setIsLoading(false);
@@ -65,15 +62,16 @@ export const Register = () => {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/users/register', {
+      await axios.post(`${BaseUrl}/users/register`, {
         username: formData.username,
         email: formData.email,
         password: formData.password
       });
 
-      setSuccess("Account created successfully! Redirecting to login...");
+      const successMessage = "Account created successfully! Redirecting to login...";
+      setSuccess(successMessage);
+      toast.success(successMessage);
       
-      // Redirect to login after success
       setTimeout(() => {
         navigate('/login');
       }, 2000);
@@ -81,11 +79,13 @@ export const Register = () => {
     } catch (err) {
       console.error('Registration error:', err);
       
+      let errorMessage = "Registration failed. Please try again later.";
       if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Registration failed. Please try again later.");
+        errorMessage = err.response.data.message;
       }
+      
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

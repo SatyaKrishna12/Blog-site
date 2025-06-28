@@ -5,6 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Ca
 import { RichTextEditor } from "../../components/RichTextEditor";
 import { generateSlug } from "../../lib/slug";
 import { ArrowLeft, Save } from "lucide-react";
+import { toast } from "react-toastify";
+const BaseUrl = import.meta.env.VITE_BASE_URL;
+
 
 export const EditPost = () => {
   const { slug } = useParams();
@@ -23,7 +26,7 @@ export const EditPost = () => {
       if (!slug) return;
       
       try {
-        const response = await axios.get(`http://localhost:5000/api/posts/${slug}`);
+        const response = await axios.get(`${BaseUrl}/posts/${slug}`);
         const post = response.data;
         
         setTitle(post.title);
@@ -32,9 +35,9 @@ export const EditPost = () => {
       } catch (error) {
         console.error('Error fetching post:', error);
         if (error.response?.status === 404) {
-          alert("The post you're trying to edit doesn't exist.");
+          toast.error("Post not found. It may have been deleted or does not exist."); 
         } else {
-          alert("Failed to load the post. Please try again.");
+          toast.error("Failed to load post. Please try again later.");
         }
         navigate("/admin");
       } finally {
@@ -49,7 +52,7 @@ export const EditPost = () => {
     e.preventDefault();
     
     if (!title.trim() || !content.trim()) {
-      alert("Please fill in both title and content.");
+      toast.error("Title and content cannot be empty.");
       return;
     }
 
@@ -63,17 +66,17 @@ export const EditPost = () => {
         updatedAt: new Date().toISOString()
       };
 
-      const response = await axios.put(`http://localhost:5000/api/posts/${originalSlug}`, postData);
+      const response = await axios.put(`${BaseUrl}/posts/${originalSlug}`, postData);
       
-      alert(`Post "${title}" has been updated successfully!`);
+     toast.success(`Post "${title}" has been updated successfully!`);
       navigate(`/blog/${response.data.slug}`);
     } catch (error) {
       console.error('Error updating post:', error);
       
       if (error.response?.status === 400 && error.response?.data?.message?.includes('Slug already exists')) {
-        alert("A post with this title already exists. Please choose a different title or modify it slightly.");
+        toast.error("A post with this title already exists. Please choose a different title or modify it slightly.");
       } else {
-        alert("Failed to update post. Please try again.");
+        toast.error("Failed to update post. Please try again.");
       }
     } finally {
       setIsSubmitting(false);
