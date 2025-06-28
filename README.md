@@ -1,10 +1,11 @@
-# BlogForge - Full-Stack Blog Platform
+# MyBlog - Full-Stack Blog Platform
 
 Welcome to **MyBlog**, a full-featured blogging platform built with the MERN stack and modern UI tools. This project supports user authentication, admin-only access, search functionality, and a clean responsive interface.
 
 ---
-##Live Link - https://blog-site-1-v49a.onrender.com/ 
----
+## Live Link -
+https://blog-site-1-v49a.onrender.com/ 
+
 
 ## 🔥 Features
 
