@@ -8,8 +8,6 @@ import { CreatePost } from './Pages/admin/CreatePost'
 import { EditPost } from './Pages/admin/EditPost'
 import { Login } from './Pages/Login'
 import { Register } from './Pages/Register'
-import { About } from './Pages/About'
-import { Contact } from './Pages/Contact'
 import { AdminRoute } from './components/ProtectedRoute'
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -21,8 +19,6 @@ function App() {
       <Routes>
         <Route  path="/" element={<BlogHome/>} />
         <Route path="/blog/:slug" element={<BlogPost />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path='/admin' element={

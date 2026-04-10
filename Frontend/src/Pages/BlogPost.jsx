@@ -25,7 +25,7 @@ export const BlogPost = () => {
         setError(null);
         
         // Update document title and meta description
-        document.title = `${response.data.title} | BlogForge`;
+        document.title = `${response.data.title} | Blog`;
         const meta = document.querySelector('meta[name="description"]');
         if (meta) {
           meta.setAttribute("content", response.data.excerpt || "");

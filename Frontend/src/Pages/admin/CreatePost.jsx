@@ -49,7 +49,7 @@ export const CreatePost = () => {
         slug: generatedSlug
       };
 
-      const response = await axios.post(`${BaseUrl}/api/posts`, postData);
+      const response = await axios.post(`${BaseUrl}/posts`, postData);
       
       toast.success(`Post "${title}" has been created successfully!`);
       
